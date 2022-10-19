@@ -7,6 +7,7 @@ from models.backbone import build_backbone
 from models.matcher import build_matcher
 #from models.transformer_CDN import build_hoi_ts
 from models.transformer_stu_output_nn_tea_output_verb import build_hoi_ts
+#from models.transformer_test import build_hoi_ts
 from util.box_ops import box_cxcywh_to_xyxy, generalized_box_iou
 from util.misc import (NestedTensor, nested_tensor_from_tensor_list,
                        accuracy, get_world_size, is_dist_avail_and_initialized)

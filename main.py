@@ -26,13 +26,13 @@ import pdb
 
 def get_args_parser():
     parser = argparse.ArgumentParser('Set transformer detector', add_help=False)
-    parser.add_argument('--lr_new', default=1e-5, type=float)
-    parser.add_argument('--lr', default=1e-6, type=float)
-    parser.add_argument('--lr_backbone', default=1e-6, type=float)
+    parser.add_argument('--lr_new', default=1e-4, type=float)
+    parser.add_argument('--lr', default=1e-5, type=float)
+    parser.add_argument('--lr_backbone', default=1e-5, type=float)
     parser.add_argument('--batch_size', default=4, type=int)
     parser.add_argument('--weight_decay', default=1e-4, type=float)
-    parser.add_argument('--epochs', default=140, type=int)
-    parser.add_argument('--lr_drop', default=100, type=int)
+    parser.add_argument('--epochs', default=80, type=int)
+    parser.add_argument('--lr_drop', default=60, type=int)
     parser.add_argument('--clip_max_norm', default=0.1, type=float,
                         help='gradient clipping max norm')
 
@@ -106,10 +106,10 @@ def get_args_parser():
     parser.add_argument('--eos_coef', default=0.1, type=float,
                         help="Relative classification weight of the no-object class")
     # my matching loss coefficients
-    parser.add_argument('--ho_match_coef',default=1,type=float)
-    parser.add_argument('--ho_match_att_coef',default=1,type=float)
-    parser.add_argument('--inter_match_coef',default=1,type=float)
-    parser.add_argument('--inter_match_att_coef',default=1,type=float)
+    parser.add_argument('--ho_match_coef',default=2,type=float)
+    parser.add_argument('--ho_match_att_coef',default=2.5,type=float)
+    parser.add_argument('--inter_match_coef',default=2,type=float)
+    parser.add_argument('--inter_match_att_coef',default=2.5,type=float)
     parser.add_argument('--verb_pred_match',default = 0,type = float)
     # dataset parameters
     parser.add_argument('--dataset_file', default='vcoco')
@@ -381,7 +381,7 @@ def main(args):
             if args.output_dir:
                 utils.save_on_master(coco_evaluator.coco_eval["bbox"].eval, output_dir / "eval.pth")
             return
-    modify_writer = SummaryWriter('6_6_1e-4_80_140')
+    modify_writer = SummaryWriter('6_6_1e-4_coef')
     print("Start training")
     start_time = time.time()
     for epoch in range(args.start_epoch, args.epochs):
@@ -430,7 +430,7 @@ def main(args):
                     'epoch': epoch,
                     'args': args,
                 }, output_dir / f'checkpoint{epoch:04}.pth')
-            if 'mAP_thesis' in  test_stats and float(test_stats["mAP_thesis"]) > 0.6380  :
+            if 'mAP_thesis' in  test_stats and float(test_stats["mAP_thesis"]) > 0.6375  :
                 utils.save_on_master({
                     'model': model_without_ddp.state_dict(),
                     'optimizer': optimizer.state_dict(),

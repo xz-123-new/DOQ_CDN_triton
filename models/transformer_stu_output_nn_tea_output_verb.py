@@ -125,13 +125,13 @@ class CDN_TS(nn.Module):
             tgt0 = torch.zeros_like(query_embed1)
             tgt2 = ho_hs_s[-1].permute(1, 0, 2)
             tgt_t = ho_hs_t[-1].permute(1, 0, 2)
-            inter_att_s, inter_att_t, inter_hs_s, inter_hs_t =self.interaction_decoder.forwardt(tgt2,memory,
+            inter_att_s, inter_att_t, inter_hs_s, inter_hs_t =self.interaction_decoder.forwardt(tgt0,memory,
                                                          memory_key_padding_mask=mask,
                                                         tgt_key_padding_mask_t=query_embed2_mask,
                                                         pos=pos_embed,
-                                                        query_pos=query_embed1,
-                                                        query_embed_q=query_embed_v,
-                                                        query_embed_e=tgt_t)
+                                                        query_pos=tgt2,
+                                                        query_embed_q=tgt_t,
+                                                        query_embed_e=query_embed_v)
             return ho_att_s, ho_att_t, inter_att_s, inter_att_t, ho_hs_s, ho_hs_t, inter_hs_s.transpose(1, 2), inter_hs_t.transpose(1, 2)
 
         else:
